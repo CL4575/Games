@@ -103,7 +103,7 @@
           resetTimeout = setTimeout(() => {
             escPressCount = 0;
             messageEl.classList.remove('show');
-          }, 3000);
+          }, 10000);
         } else if (escPressCount === 2) {
           // Redirect on second press
           window.location.href = redirectUrl;
