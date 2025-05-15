@@ -1,77 +1,91 @@
 <h1>Press ESC Twice to switch to Schoology!</h1>
-<a href="Brightestgames.html" target="_blank">Brightestgames.com</a>
-  <a href="Onlinegames.html" target="_blank">Online games.com</a>
-<a href="speedstars.html" target="_blank">Speed stars</a>
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no" />
-  <title>Double ESC Redirect Demo</title>
-  <style>
-    /* Modern, clean, and responsive styling */
-    body {
-      margin: 0;
-      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-      background: linear-gradient(135deg, #667eea, #764ba2);
-      color: white;
-      display: flex;
-      flex-direction: column;
-      justify-content: center;
-      align-items: center;
-      height: 100vh;
-      text-align: center;
-      padding: 1rem;
-      box-sizing: border-box;
-      position: relative;
-    }
-    h1 {
-      font-size: 2.5rem;
-      margin-bottom: 0.5rem;
-    }
-    p {
-      font-size: 1.2rem;
-      margin-bottom: 2rem;
-      max-width: 320px;
-    }
-    .redirect-info {
-      font-size: 1rem;
-      opacity: 0.8;
-    }
-    .message {
-      position: fixed;
-      bottom: 20px;
-      left: 50%;
-      transform: translateX(-50%);
-      background: rgba(0,0,0,0.7);
-      padding: 12px 24px;
-      border-radius: 12px;
-      font-size: 1rem;
-      opacity: 0;
-      pointer-events: none;
-      transition: opacity 0.3s ease;
-      user-select: none;
-    }
-    .message.show {
-      opacity: 1;
-      pointer-events: auto;
-    }
-    @media (max-width: 600px) {
-      h1 {
-        font-size: 2rem;
-      }
-      p {
-        font-size: 1rem;
-        max-width: 280px;
-      }
-      .message {
-        font-size: 0.9rem;
-        padding: 10px 20px;
-      }
-    }
-  </style>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>IP Restricted Website</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@400;700&display=swap');
+
+  body, html {
+    margin: 0; padding: 0; height: 100%;
+    font-family: 'Poppins', sans-serif;
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    color: #fff;
+    overflow: hidden;
+  }
+
+  .container {
+    height: 100%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    text-align: center;
+    padding: 2rem;
+    flex-direction: column;
+    animation: fadeIn 1.5s ease forwards;
+  }
+  
+  h1 {
+    font-size: 3rem;
+    margin-bottom: 0.25em;
+    letter-spacing: 2px;
+  }
+  
+  p {
+    font-size: 1.25rem;
+    margin-bottom: 1.5em;
+    max-width: 480px;
+    line-height: 1.5;
+    color: #dcd6f7;
+  }
+  
+  .spinner {
+    width: 48px;
+    height: 48px;
+    border: 6px solid rgba(255,255,255,0.3);
+    border-top-color: #fff;
+    border-radius: 50%;
+    animation: spin 1s linear infinite;
+    margin: 30px auto;
+  }
+  
+  .access-denied {
+    animation: shake 0.6s ease;
+    color: #ff6b6b;
+  }
+
+  @keyframes spin {
+    to { transform: rotate(360deg); }
+  }
+  
+  @keyframes fadeIn {
+    from {opacity: 0;}
+    to {opacity: 1;}
+  }
+
+  @keyframes shake {
+    0%, 100% { transform: translateX(0); }
+    20%, 60% { transform: translateX(-10px); }
+    40%, 80% { transform: translateX(10px); }
+  }
+</style>
 </head>
 <body>
+<div class="container" id="content">
+  <div id="loading">
+    <h1>Checking Access...</h1>
+    <div class="spinner"></div>
+    <p>Please wait while we verify your IP address.</p>
+  </div>
+  
+  <div id="mainContent" style="display:none;">
+   <a href="Brightestgames.html" target="_blank">Brightestgames.com</a>
+  <a href="Onlinegames.html" target="_blank">Online games.com</a>
+<a href="speedstars.html" target="_blank">Speed stars</a>
+  </div>
 
   <div id="message" class="message"></div>
 
@@ -113,3 +127,64 @@
   </script>
 </body>
 </html>
+  </div>
+  
+  <div id="denied" class="access-denied" style="display:none;">
+    <h1>Access Denied</h1>
+    <p>Sorry, your IP address is not authorized to access this website.</p>
+  </div>
+</div>
+
+<script>
+  // Allowed IP addresses array
+  const allowedIPs = [
+    "66.220.212.225",
+    "111.222.333.444",
+    "8.8.8.8"
+  ]; // Change these to the allowed IP addresses
+  
+  async function checkIP() {
+    try {
+      const response = await fetch('https://api.ipify.org?format=json', {cache: "no-cache"});
+      if (!response.ok) throw new Error('Network response was not ok');
+      const data = await response.json();
+      const userIP = data.ip;
+
+      // Debug: Uncomment to see the detected IP in console
+      // console.log('User IP:', userIP);
+
+      const loadingEl = document.getElementById('loading');
+      const mainEl = document.getElementById('mainContent');
+      const deniedEl = document.getElementById('denied');
+
+      if(allowedIPs.includes(userIP)) {
+        // Show main content
+        loadingEl.style.display = 'none';
+        deniedEl.style.display = 'none';
+        mainEl.style.display = 'block';
+      } else {
+        // Show access denied
+        loadingEl.style.display = 'none';
+        mainEl.style.display = 'none';
+        deniedEl.style.display = 'block';
+      }
+    } catch (error) {
+      // On error, deny access just to be safe 
+      const loadingEl = document.getElementById('loading');
+      const mainEl = document.getElementById('mainContent');
+      const deniedEl = document.getElementById('denied');
+
+      loadingEl.style.display = 'none';
+      mainEl.style.display = 'none';
+      deniedEl.style.display = 'block';
+      deniedEl.innerHTML = "<h1>Access Denied</h1><p>Unable to verify your IP address.</p>";
+      console.error('Error fetching IP:', error);
+    }
+  }
+
+  checkIP();
+</script>
+</body>
+</html>
+
+
